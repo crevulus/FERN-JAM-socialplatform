@@ -3,11 +3,14 @@ const admin = require('firebase-admin');
 const express = require('express');
 const firebase = require('firebase');
 
-admin.initializeApp();
-
 const serviceAccount = require('./serviceAccountKey.json');
 
 // needed to generate new private key from settings -> service accounts
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://socialplatform-e0690.firebaseio.com"
+});
+
 // extra fields from auth -> add a web app
 firebase.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -80,35 +83,44 @@ app.post('/signup', (req, res) => {
     userHandle: req.body.userHandle
   };
 
+  let userToken, userId;
+
   db.doc(`/users/${newUser.userHandle}`).get()
     .then(doc => {
       if (doc.exists) {
         return res.status(400).json({ handle: 'This handle is already taken' })
+      } else {
+        return firebase
+          .auth()
+          .createUserWithEmailAndPassword(newUser.email, newUser.password);
       }
-      return firebase
-        .auth()
-        .createUserWithEmailAndPassword(newUser.email, newUser.password);
     })
     .then(data => {
+      userId = data.user.uid;
+      // firebase method
       return data.user.getIdToken();
     })
     .then(token => {
-      return res.status(201).json({ token })
+      userToken = token;
+      const userCred = {
+        userHandle: newUser.userHandle,
+        email: newUser.email,
+        createdAt: new Date().toISOString(),
+        userId,
+      };
+      // creates document in db
+      return db.doc(`/users/${newUser.userHandle}`).set(userCred);
+    })
+    .then(() => {
+      return res.status(201).json({ userToken });
     })
     .catch(err => {
       console.error(err);
-      return res.status(500).json({ error: err.code })
-    });
-
-  firebase
-    .auth()
-    .createUserWithEmailAndPassword(newUser.email, newUser.password)
-    .then(data => {
-      res.status(201).json({ message: `user ${data.user.uid} signed up!` })
-    })
-    .catch(err => {
-      console.error(err);
-      return res.status(500).json({ error: err.code })
+      if (err.code === 'auth/email-already-in-use') {
+        return res.status(400).json({ email: 'Email already in use' });
+      } else {
+        return res.status(500).json({ error: err.code });
+      }
     });
 });
 
