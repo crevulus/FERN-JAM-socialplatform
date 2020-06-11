@@ -3,7 +3,7 @@ const express = require('express');
 const firebase = require('firebase');
 
 const { getAllMentions, postMention } = require('./routes/mentions');
-const { signup, login } = require('./routes/users');
+const { signup, login, uploadProfilePhoto } = require('./routes/users');
 const firebaseAuth = require('./util/auth');
 
 const app = express();
@@ -20,6 +20,7 @@ app.post('/mentions', firebaseAuth, postMention);
 // User routes
 app.post('/signup', signup);
 app.post('/login', login);
+app.post('/user/image', firebaseAuth, uploadProfilePhoto);
 
 // exports function that handles HTTP events
 // specifies zone and saves few hundred ms of latency

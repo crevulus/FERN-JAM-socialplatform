@@ -1,5 +1,9 @@
 const { db, admin } = require('../util/admin');
 const firebase = require('firebase');
+const BusBoy = require('busboy');
+const path = require('path');
+const os = require('os');
+const fs = require('fs');
 
 // needed to generate new private key from settings -> service accounts
 const serviceAccount = require('../serviceAccountKey.json');
@@ -19,6 +23,9 @@ firebase.initializeApp({
   measurementId: "G-TJTVK7512W"
 });
 
+// had to extract to use later in URL
+const storageBucket = "socialplatform-e0690.appspot.com";
+
 exports.signup = (req, res) => {
   const newUser = {
     email: req.body.email,
@@ -30,6 +37,8 @@ exports.signup = (req, res) => {
   const { valid, errors } = validateSignupData(newUser);
 
   if (!valid) return res.status(400).json(errors);
+
+  const noImage = 'blank-profile-picture.png';
 
   let userToken, userId;
 
@@ -54,6 +63,7 @@ exports.signup = (req, res) => {
         userHandle: newUser.userHandle,
         email: newUser.email,
         createdAt: new Date().toISOString(),
+        imageUrl: `https://firebasestorage.googleapis.com/v0/b/${storageBucket}/o/${noImage}?alt=media`,
         userId,
       };
       // creates document in db
@@ -98,4 +108,50 @@ exports.login = (req, res) => {
       }
       return res.status(500).json({ error: err.code });
     })
+};
+
+let imageName;
+let imageForUpload = {};
+
+exports.uploadProfilePhoto = (req, res) => {
+  const busboy = new BusBoy({ headers: req.headers });
+  // busyboy takes 5 args
+  busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+    if (mimetype !== 'image/jpeg' && mimetype !== 'image/png') {
+      return res.status(400).json({ error: 'wrong file type' });
+    }
+    // get ext from any filename
+    const imageExt = filename.split('.')[filename.split('.').length - 1];
+    imageName = `${Math.round(Math.random() * 100000)}.${imageExt}`;
+    const filepath = path.join(os.tmpdir(), imageName); // tmpdir b/c not an actual server but a cloud fn
+    imageForUpload = {
+      filepath,
+      mimetype
+    };
+    file.pipe(fs.createWriteStream(filepath)); // creates file
+  });
+  busboy.on('finish', () => {
+    admin.storage().bucket(storageBucket).upload(imageForUpload.filepath, {
+      resumable: false,
+      metadata: {
+        metadata: {
+          contentType: imageForUpload.mimetype
+        }
+      }
+    })
+      .then(() => {
+        // adding alt=media shows on browser rather than downloading
+        const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${storageBucket}/o/${imageName}?alt=media`
+        // access to req obj because it's been through firebaseAuth process
+        return db.doc(`/users/${req.user.userHandle}`).update({ imageUrl })
+      })
+      .then(() => {
+        return res.json({ message: 'Image uploaded' })
+      })
+      .catch(err => {
+        console.error(err);
+        return res.status(500).json({ error: err.code })
+      });
+  });
+  busboy.end(req.rawBody);
 };
