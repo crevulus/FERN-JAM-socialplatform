@@ -3,6 +3,8 @@ const admin = require('firebase-admin');
 const express = require('express');
 const firebase = require('firebase');
 
+admin.initializeApp();
+
 const serviceAccount = require('./serviceAccountKey.json');
 
 // needed to generate new private key from settings -> service accounts
@@ -20,14 +22,14 @@ firebase.initializeApp({
 });
 
 const app = express();
+const db = admin.firestore();
 
 exports.helloWorld = functions.https.onRequest((request, response) => {
   response.send("Hello from Firebase!");
 });
 
 app.get('/mentions', (req, res) => {
-  admin
-    .firestore()
+  db
     .collection('mentions')
     .orderBy('createdAt', 'desc')
     .get()
@@ -57,8 +59,7 @@ app.post('/mentions', (req, res) => {
     createdAt: new Date().toISOString()
   };
   // persist in db
-  admin
-    .firestore()
+  db
     .collection('mentions')
     .add(newMention)
     .then(doc => {
@@ -78,6 +79,27 @@ app.post('/signup', (req, res) => {
     confirmPassword: req.body.confirmPassword,
     userHandle: req.body.userHandle
   };
+
+  db.doc(`/users/${newUser.userHandle}`).get()
+    .then(doc => {
+      if (doc.exists) {
+        return res.status(400).json({ handle: 'This handle is already taken' })
+      }
+      return firebase
+        .auth()
+        .createUserWithEmailAndPassword(newUser.email, newUser.password);
+    })
+    .then(data => {
+      return data.user.getIdToken();
+    })
+    .then(token => {
+      return res.status(201).json({ token })
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({ error: err.code })
+    });
+
   firebase
     .auth()
     .createUserWithEmailAndPassword(newUser.email, newUser.password)
