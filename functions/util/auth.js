@@ -22,6 +22,7 @@ module.exports = (req, res, next) => {
     .then(data => {
       // getting userHandle prop from db and attaching it to our user
       req.user.userHandle = data.docs[0].data().userHandle;
+      req.user.imageUrl = data.docs[0].data().imageUrl;
       return next();
     })
     .catch(err => res.json(err));

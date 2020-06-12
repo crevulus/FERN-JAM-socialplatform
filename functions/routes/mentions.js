@@ -42,3 +42,58 @@ exports.postMention = (req, res) => {
       return res.status(500).json({ error: 'You done goofed' });
     });
 };
+
+exports.getMention = (req, res) => {
+  let mentionData = {};
+  db
+    .doc(`/mentions/${req.params.mentionId}`)
+    .get()
+    .then((doc) => {
+      if (!doc.exists) {
+        return res.status(404).json({ error: 'Mention not found' });
+      }
+      mentionData = doc.data();
+      mentionData.mentionId = doc.id;
+      return db.collection('comments').orderBy('createdAt', 'asc').where('mentionId', '==', req.params.mentionId).get();
+    })
+    .then((data) => {
+      mentionData.comments = [];
+      data.forEach((doc) => {
+        mentionData.comments.push(doc.data());
+      });
+      return res.json(mentionData);
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+}
+
+exports.commentOnMention = (req, res) => {
+  if (req.body.body.trim() === '') {
+    return res.status(400).json({ error: 'Cannot post empty comments' })
+  }
+  const newComment = {
+    body: req.body.body,
+    createdAt: new Date().toISOString(),
+    mentionId: req.params.mentionId,
+    userHandle: req.user.userHandle,
+    userImage: req.user.imageUrl
+  }
+  db.doc(`/mentions/${req.params.mentionId}`).get()
+    .then(doc => {
+      if (!doc.exists) {
+        return res.status(404).json({ error: 'Mention not found' });
+      }
+      // adds new document. Takes JSON.
+      return db.collection('comments').add(newComment);
+    })
+    // if reached here: doc created successfully
+    .then(() => {
+      return res.json(newComment);
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+}

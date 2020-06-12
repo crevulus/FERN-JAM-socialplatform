@@ -2,7 +2,7 @@ const functions = require('firebase-functions');
 const express = require('express');
 const firebase = require('firebase');
 
-const { getAllMentions, postMention } = require('./routes/mentions');
+const { getAllMentions, postMention, getMention, commentOnMention } = require('./routes/mentions');
 const { signup, login, uploadProfilePhoto, addUserDetails, getAuthUser } = require('./routes/users');
 const firebaseAuth = require('./util/auth');
 
@@ -15,7 +15,10 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 
 // mention routes
 app.get('/mentions', getAllMentions);
-app.post('/mentions', firebaseAuth, postMention);
+app.post('/mention', firebaseAuth, postMention);
+app.get('/mentions/:mentionId', getMention);
+app.post('/mentions/:mentionId/comment', firebaseAuth, commentOnMention)
+
 
 // User routes
 app.post('/signup', signup);

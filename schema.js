@@ -19,6 +19,14 @@ const db = {
       userId: String,
       website: String,
     }
+  ],
+  comments: [
+    {
+      userHandle: String,
+      mentionId: String,
+      body: String,
+      createdAt: Date
+    }
   ]
 }
 
