@@ -1,32 +1,43 @@
-const functions = require('firebase-functions');
-const express = require('express');
-const firebase = require('firebase');
+const functions = require("firebase-functions");
+const express = require("express");
+const firebase = require("firebase");
 
-const { getAllMentions, postMention, getMention, commentOnMention } = require('./routes/mentions');
-const { signup, login, uploadProfilePhoto, addUserDetails, getAuthUser } = require('./routes/users');
-const firebaseAuth = require('./util/auth');
+const {
+  getAllMentions,
+  postMention,
+  getMention,
+  commentOnMention,
+  likeMention,
+} = require("./routes/mentions");
+const {
+  signup,
+  login,
+  uploadProfilePhoto,
+  addUserDetails,
+  getAuthUser,
+} = require("./routes/users");
+const firebaseAuth = require("./util/auth");
 
 const app = express();
-
 
 exports.helloWorld = functions.https.onRequest((request, response) => {
   response.send("Hello from Firebase!");
 });
 
 // mention routes
-app.get('/mentions', getAllMentions);
-app.post('/mention', firebaseAuth, postMention);
-app.get('/mentions/:mentionId', getMention);
-app.post('/mentions/:mentionId/comment', firebaseAuth, commentOnMention)
-
+app.get("/mentions", getAllMentions);
+app.post("/mentions", firebaseAuth, postMention);
+app.get("/mentions/:mentionId", getMention);
+app.post("/mentions/:mentionId/comment", firebaseAuth, commentOnMention);
+app.get("/mentions/:mentionId/like", firebaseAuth, likeMention);
 
 // User routes
-app.post('/signup', signup);
-app.post('/login', login);
-app.post('/user/image', firebaseAuth, uploadProfilePhoto);
-app.post('/user', firebaseAuth, addUserDetails);
-app.get('/user', firebaseAuth, getAuthUser);
+app.post("/signup", signup);
+app.post("/login", login);
+app.post("/user/image", firebaseAuth, uploadProfilePhoto);
+app.post("/user", firebaseAuth, addUserDetails);
+app.get("/user", firebaseAuth, getAuthUser);
 
 // exports function that handles HTTP events
 // specifies zone and saves few hundred ms of latency
-exports.api = functions.region('europe-west3').https.onRequest(app);
+exports.api = functions.region("europe-west3").https.onRequest(app);
