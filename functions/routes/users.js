@@ -8,7 +8,7 @@ const fs = require('fs');
 // needed to generate new private key from settings -> service accounts
 const serviceAccount = require('../serviceAccountKey.json');
 
-const { validateSignupData, validateLoginData, } = require('../util/validators');
+const { validateSignupData, validateLoginData, reduceUserDetails } = require('../util/validators');
 
 // extra fields from auth -> add a web app
 firebase.initializeApp({
@@ -112,6 +112,44 @@ exports.login = (req, res) => {
 
 let imageName;
 let imageForUpload = {};
+
+exports.addUserDetails = (req, res) => {
+  let userDetails = reduceUserDetails(req.body);
+  db
+    .doc(`/users/${req.user.userHandle}`)
+    .update(userDetails)
+    .then(() => {
+      return res.json({ message: 'Deatils added to user' });
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({ error: err.code })
+    });
+}
+
+exports.getAuthUser = (req, res) => {
+  let resData = {};
+  db
+    .doc(`/users/${req.user.userHandle}`)
+    .get()
+    .then(doc => {
+      if (doc.exists) {
+        resData.credentials = doc.data();
+        return db.collection('likes').where('userHandle', '==', req.user.userHandle).get();
+      }
+    })
+    .then(data => {
+      resData.likes = [];
+      data.forEach(doc => {
+        resData.likes.push(doc.data());
+      });
+      return res.json(resData);
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({ error: err.code })
+    });
+}
 
 exports.uploadProfilePhoto = (req, res) => {
   const busboy = new BusBoy({ headers: req.headers });
