@@ -92,6 +92,9 @@ exports.commentOnMention = (req, res) => {
       if (!doc.exists) {
         return res.status(404).json({ error: "Mention not found" });
       }
+      return doc.ref.update({ commentCount: doc.data().commentCount + 1 });
+    })
+    .then(() => {
       // adds new document. Takes JSON.
       return db.collection("comments").add(newComment);
     })
