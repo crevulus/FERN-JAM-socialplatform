@@ -8,6 +8,7 @@ const {
   getMention,
   commentOnMention,
   likeMention,
+  deleteMention,
 } = require("./routes/mentions");
 const {
   signup,
@@ -30,6 +31,7 @@ app.post("/mentions", firebaseAuth, postMention);
 app.get("/mentions/:mentionId", getMention);
 app.post("/mentions/:mentionId/comment", firebaseAuth, commentOnMention);
 app.get("/mentions/:mentionId/like", firebaseAuth, likeMention);
+app.delete("/mentions/:mentionId", firebaseAuth, deleteMention);
 
 // User routes
 app.post("/signup", signup);

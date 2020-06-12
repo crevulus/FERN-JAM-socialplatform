@@ -155,3 +155,26 @@ exports.likeMention = (req, res) => {
       res.status(500).json({ error: err.code });
     });
 };
+
+exports.deleteMention = (req, res) => {
+  const mentionDocument = db.doc(`/mentions/${req.params.mentionId}`);
+  mentionDocument
+    .get()
+    .then((doc) => {
+      if (!doc.exists) {
+        return res.status(404).json({ error: "Mention not found" });
+      }
+      if (doc.data().userHandle !== req.user.userHandle) {
+        return res.status(403).json({ error: "Not authorised" });
+      } else {
+        return mentionDocument.delete();
+      }
+    })
+    .then(() => {
+      res.json({ message: "Mention deleted successfully" });
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
