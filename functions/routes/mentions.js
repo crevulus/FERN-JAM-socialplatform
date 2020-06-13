@@ -1,4 +1,5 @@
 const { db } = require("../util/admin");
+const functions = require("firebase-functions");
 
 exports.getAllMentions = (req, res) => {
   db.collection("mentions")
@@ -14,6 +15,9 @@ exports.getAllMentions = (req, res) => {
           body: doc.data().body,
           userHandle: doc.data().userHandle,
           createdAt: doc.data().createdAt,
+          commentCount: doc.data().commentCount,
+          likeCount: doc.data().likecount,
+          userImage: doc.data().userImage,
         });
       });
       return res.json(mentions);
@@ -77,7 +81,7 @@ exports.getMention = (req, res) => {
 
 exports.commentOnMention = (req, res) => {
   if (req.body.body.trim() === "") {
-    return res.status(400).json({ error: "Cannot post empty comments" });
+    return res.status(400).json({ comment: "Cannot post empty comments" });
   }
   const newComment = {
     body: req.body.body,
@@ -178,3 +182,54 @@ exports.deleteMention = (req, res) => {
       return res.status(500).json({ error: err.code });
     });
 };
+
+exports.onUserImageChange = functions
+  .region("europe-west3")
+  .firestore.document(`/users/{userId}`)
+  // snapshot has two values: before and after.
+  .onUpdate((change) => {
+    if (change.before.data().imageUrl !== change.after.data().imageUrl) {
+      // writes batches; commited with .commit()
+      let batch = db.batch();
+      return db
+        .collection("mentions")
+        .where("userHandle", "==", change.before.data().userHandle)
+        .get()
+        .then((data) => {
+          // forEach document this user has created
+          data.forEach((doc) => {
+            const mention = db.doc(`/mentions/${doc.id}`);
+            batch.update(mention, { userImage: change.after.data().imageUrl });
+          });
+          return batch.commit();
+        });
+    }
+  });
+
+exports.onMentionDeleted = functions
+  .region("europe-west3")
+  .firestore.document(`/users/{mentionId}`)
+  .onDelete((snapshot, context) => {
+    const mentionId = context.params.mentionId;
+    let batch = db.batch();
+    return db
+      .collection("comments")
+      .where("mentionId", "==", mentionId)
+      .get()
+      .then((data) => {
+        data.forEach((doc) => {
+          batch.delete(db.doc(`/comments/${doc.id}`));
+        });
+        return db.collection("likes").where("mentionId", "==", mentionId);
+      })
+      .then((data) => {
+        data.forEach((doc) => {
+          batch.delete(db.doc(`/likes/${doc.id}`));
+        });
+        return batch.commit();
+      })
+      .catch((err) => {
+        console.error(err);
+        return res.status(500).json({ error: err.code });
+      });
+  });
