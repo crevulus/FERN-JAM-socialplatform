@@ -9,7 +9,7 @@ export default class NavBar extends Component {
     return (
       <div>
         <AppBar position="fixed">
-          <Toolbar>
+          <Toolbar className="nav-container">
             <Button color="inherit" component={Link} to="/">
               Home
             </Button>
