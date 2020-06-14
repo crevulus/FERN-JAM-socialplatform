@@ -1,6 +1,8 @@
 import React, { Component } from "react";
-import Grid from "@material-ui/core/Grid";
 import axios from "axios";
+import Mention from "../components/Mention";
+
+import Grid from "@material-ui/core/Grid";
 
 export default class Home extends Component {
   state = {
@@ -21,9 +23,7 @@ export default class Home extends Component {
 
   render() {
     let recentMentions = this.state.mentions ? (
-      this.state.mentions.map((mention) => {
-        return <p>{mention.body}</p>;
-      })
+      this.state.mentions.map((mention) => <Mention mention={mention} />)
     ) : (
       <p>Loading...</p>
     );
