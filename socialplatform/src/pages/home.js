@@ -1,12 +1,36 @@
 import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
+import axios from "axios";
 
 export default class Home extends Component {
+  state = {
+    mentions: null,
+  };
+
+  componentDidMount() {
+    axios
+      .get("/mentions")
+      .then((res) => {
+        console.log(res.data);
+        this.setState({
+          mentions: res.data,
+        });
+      })
+      .catch((err) => console.error(err));
+  }
+
   render() {
+    let recentMentions = this.state.mentions ? (
+      this.state.mentions.map((mention) => {
+        return <p>{mention.body}</p>;
+      })
+    ) : (
+      <p>Loading...</p>
+    );
     return (
-      <Grid container>
+      <Grid container spacing={10}>
         <Grid item sm={8} xs={12}>
-          <p>Content Left</p>
+          {recentMentions}
         </Grid>
         <Grid item sm={4} xs={12}>
           <p>Profile Right</p>
