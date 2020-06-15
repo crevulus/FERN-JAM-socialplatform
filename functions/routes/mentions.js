@@ -10,7 +10,7 @@ exports.getAllMentions = (req, res) => {
       // data = document reference, not data itself
       data.forEach((doc) => {
         mentions.push({
-          screamId: doc.id,
+          mentionId: doc.id,
           // could use spread operator with newer node versions
           body: doc.data().body,
           userHandle: doc.data().userHandle,
