@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import axios from "axios";
 
 import withStyles from "@material-ui/core/styles/withStyles";
 import Grid from "@material-ui/core/Grid";
@@ -18,6 +19,10 @@ const styles = {
   button: {
     marginTop: 15,
   },
+  customError: {
+    color: "red",
+    fontSize: "0.8rem",
+  },
 };
 
 class Login extends Component {
@@ -32,7 +37,30 @@ class Login extends Component {
   }
 
   handleSubmit = (event) => {
-    console.log("submitted");
+    event.preventDefault();
+    this.setState({
+      loading: true,
+    });
+    const userData = {
+      email: this.state.email,
+      password: this.state.password,
+    };
+    axios
+      .post("/login", userData)
+      .then((res) => {
+        console.log(res.data);
+        this.setState({
+          loading: false,
+        });
+        // redirect to home
+        this.props.history.push("/");
+      })
+      .catch((err) => {
+        this.setState({
+          errors: err.response.data,
+          loading: false,
+        });
+      });
   };
 
   handleChange = (event) => {
@@ -43,6 +71,7 @@ class Login extends Component {
 
   render() {
     const { classes } = this.props;
+    const { errors, loading } = this.state;
     return (
       <Grid container className={classes.form}>
         <Grid item sm />
@@ -57,6 +86,8 @@ class Login extends Component {
               name="email"
               type="email"
               label="Email"
+              helperText={errors.email}
+              error={errors.email ? true : false}
               className={classes.textField}
               value={this.state.email}
               onChange={this.handleChange}
@@ -67,11 +98,18 @@ class Login extends Component {
               name="password"
               type="password"
               label="Password"
+              helperText={errors.password}
+              error={errors.password ? true : false}
               className={classes.textField}
               value={this.state.password}
               onChange={this.handleChange}
               fullWidth
             />
+            {errors.general && (
+              <Typography variant="body2" className={classes.customError}>
+                {errors.general}
+              </Typography>
+            )}
             <Button
               type="submit"
               variant="contained"
