@@ -1,11 +1,33 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-export default class Login extends Component {
+import withStyles from "@material-ui/core/styles/withStyles";
+import Grid from "@material-ui/core/Grid";
+import icon from "../magoosh-ticks.png";
+
+const styles = {
+  form: {
+    textAlign: "center",
+  },
+};
+
+class Login extends Component {
   render() {
+    const { classes } = this.props;
     return (
-      <div>
-        <h1>Login</h1>
-      </div>
+      <Grid container className={classes.form}>
+        <Grid item sm />
+        <Grid item sm>
+          <img src={icon} alt="Logo" />
+        </Grid>
+        <Grid item sm />
+      </Grid>
     );
   }
 }
+
+Login.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(Login);

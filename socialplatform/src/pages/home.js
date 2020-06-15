@@ -23,7 +23,9 @@ export default class Home extends Component {
 
   render() {
     let recentMentions = this.state.mentions ? (
-      this.state.mentions.map((mention) => <Mention mention={mention} />)
+      this.state.mentions.map((mention) => (
+        <Mention key={mention.mentionId} mention={mention} />
+      ))
     ) : (
       <p>Loading...</p>
     );
