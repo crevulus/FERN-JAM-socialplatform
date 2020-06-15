@@ -14,10 +14,10 @@ export default class NavBar extends Component {
               Home
             </Button>
             <Button color="inherit" component={Link} to="/login">
-              Login
+              Log In
             </Button>
             <Button color="inherit" component={Link} to="/signup">
-              Signup
+              Sign Up
             </Button>
           </Toolbar>
         </AppBar>

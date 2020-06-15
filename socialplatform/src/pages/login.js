@@ -52,6 +52,7 @@ class Login extends Component {
       .post("/login", userData)
       .then((res) => {
         console.log(res.data);
+        localStorage.setItem("firebaseIdToken", `Bearer ${res.data.token}`);
         this.setState({
           loading: false,
         });
@@ -81,7 +82,7 @@ class Login extends Component {
         <Grid item sm>
           <img src={icon} alt="Logo" className={classes.logo} />
           <Typography variant="h2" className={classes.pageTitle}>
-            Login
+            Log In
           </Typography>
           <form noValidate onSubmit={this.handleSubmit}>
             <TextField
@@ -119,6 +120,7 @@ class Login extends Component {
               size="large"
               color="primary"
               className={classes.button}
+              disabled={loading} // takes a boolean value
             >
               Log in
               {loading && <CircularProgress color="secondary" size="30" />}
