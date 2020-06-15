@@ -63,6 +63,7 @@ class Signup extends Component {
         this.props.history.push("/");
       })
       .catch((err) => {
+        console.log(err.response);
         this.setState({
           errors: err.response.data,
           loading: false,
