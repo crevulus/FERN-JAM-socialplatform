@@ -42,6 +42,13 @@ class Login extends Component {
     };
   }
 
+  //props aren't loaded into component on mount so we require this hook
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.UI.errors) {
+      this.setState({ errors: nextProps.UI.errors });
+    }
+  }
+
   handleSubmit = (event) => {
     event.preventDefault();
     const userData = {

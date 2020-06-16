@@ -11,7 +11,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        errors: action.payload,
+        errors: action.payload, // this is where we have the undefined problem...
       };
     case CLEAR_ERRORS:
       return {

@@ -22,7 +22,7 @@ export const loginUser = (userData, history) => (dispatch) => {
       console.log("got into catch before dispatch");
       dispatch({
         type: SET_ERRORS,
-        payload: err.response.data,
+        payload: err.response.data, // this is where we have the undefined problem...
       });
     });
 };
