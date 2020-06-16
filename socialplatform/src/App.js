@@ -58,13 +58,13 @@ function App() {
               <AuthRoute
                 exact
                 path="/login"
-                component={Login}
+                comp={Login}
                 authenticated={authenticated}
               />
               <AuthRoute
                 exact
                 path="/signup"
-                component={Signup}
+                comp={Signup}
                 authenticated={authenticated}
               />
             </Switch>

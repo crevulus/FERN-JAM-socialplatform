@@ -62,7 +62,7 @@ exports.signup = (req, res) => {
     .then((data) => {
       userId = data.user.uid;
       // firebase method
-      return data.user.getIdToken();
+      return data.user.getIdToken(true);
     })
     .then((token) => {
       userToken = token;
@@ -105,7 +105,7 @@ exports.login = (req, res) => {
     .auth()
     .signInWithEmailAndPassword(user.email, user.password)
     .then((data) => {
-      return data.user.getIdToken();
+      return data.user.getIdToken(true);
     })
     .then((token) => {
       return res.json({ token });
