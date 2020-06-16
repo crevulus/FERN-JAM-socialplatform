@@ -55,7 +55,7 @@ class Signup extends Component {
     axios
       .post("/signup", newUserData)
       .then((res) => {
-        localStorage.setItem("firebaseIdToken", `Bearer ${res.data.token}`);
+        localStorage.setItem("firebaseIdToken", `Bearer ${res.data.userToken}`);
         this.setState({
           loading: false,
         });
