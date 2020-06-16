@@ -50,7 +50,9 @@ exports.signup = (req, res) => {
     .get()
     .then((doc) => {
       if (doc.exists) {
-        return res.status(400).json({ handle: "This handle is already taken" });
+        return res
+          .status(400)
+          .json({ userHandle: "This handle is already taken" });
       } else {
         return firebase
           .auth()
