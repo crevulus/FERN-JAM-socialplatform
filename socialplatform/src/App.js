@@ -5,10 +5,12 @@ import {
   NavLink,
   Switch,
 } from "react-router-dom";
+import decode from "jwt-decode";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
 import NavBar from "./components/NavBar";
+import AuthRoute from "./util/AuthRoute";
 
 import "./App.css";
 
@@ -29,6 +31,21 @@ const theme = createMuiTheme({
   },
 });
 
+let authenticated;
+
+const token = localStorage.firebaseIdToken;
+
+// check for authentication
+if (token) {
+  const decodedToken = decode(token);
+  // extract exp date from jwt obj
+  if (decodedToken.exp * 1000 < Date.now()) {
+    window.location.href = "/login";
+    authenticated = false;
+  }
+  authenticated = true;
+}
+
 function App() {
   return (
     <MuiThemeProvider theme={theme}>
@@ -38,8 +55,18 @@ function App() {
           <div className="container">
             <Switch>
               <Route exact path="/" component={Home} />
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/signup" component={Signup} />
+              <AuthRoute
+                exact
+                path="/login"
+                component={Login}
+                authenticated={authenticated}
+              />
+              <AuthRoute
+                exact
+                path="/signup"
+                component={Signup}
+                authenticated={authenticated}
+              />
             </Switch>
           </div>
         </Router>
