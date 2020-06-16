@@ -6,8 +6,11 @@ import {
   Switch,
 } from "react-router-dom";
 import decode from "jwt-decode";
+
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import { SET_AUTHENTICATED } from "./redux/types";
+import { logoutUser, getUserData } from "./redux/actions/userActions";
 
 import Home from "./pages/home";
 import Login from "./pages/login";
@@ -19,6 +22,7 @@ import "./App.css";
 
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import purple from "@material-ui/core/colors/purple";
+import axios from "axios";
 
 const theme = createMuiTheme({
   palette: {
@@ -34,8 +38,6 @@ const theme = createMuiTheme({
   },
 });
 
-let authenticated;
-
 const token = localStorage.firebaseIdToken;
 
 // check for authentication
@@ -43,11 +45,14 @@ if (token) {
   const decodedToken = decode(token);
   // extract exp date from jwt obj
   if (decodedToken.exp * 1000 < Date.now()) {
+    store.dispatch(logoutUser());
     window.location.href = "/login";
-    authenticated = false;
     localStorage.clear();
+  } else {
+    store.dispatch({ type: SET_AUTHENTICATED });
+    axios.defaults.headers.common["Authorization"] = token;
+    store.dispatch(getUserData());
   }
-  authenticated = true;
 }
 
 function App() {
@@ -59,18 +64,8 @@ function App() {
           <div className="container">
             <Switch>
               <Route exact path="/" component={Home} />
-              <AuthRoute
-                exact
-                path="/login"
-                comp={Login}
-                authenticated={authenticated}
-              />
-              <AuthRoute
-                exact
-                path="/signup"
-                comp={Signup}
-                authenticated={authenticated}
-              />
+              <AuthRoute exact path="/login" comp={Login} />
+              <AuthRoute exact path="/signup" comp={Signup} />
             </Switch>
           </div>
         </Router>
