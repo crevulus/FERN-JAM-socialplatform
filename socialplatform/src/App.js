@@ -6,6 +6,9 @@ import {
   Switch,
 } from "react-router-dom";
 import decode from "jwt-decode";
+import { Provider } from "react-redux";
+import store from "./redux/store";
+
 import Home from "./pages/home";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
@@ -42,6 +45,7 @@ if (token) {
   if (decodedToken.exp * 1000 < Date.now()) {
     window.location.href = "/login";
     authenticated = false;
+    localStorage.clear();
   }
   authenticated = true;
 }
@@ -49,7 +53,7 @@ if (token) {
 function App() {
   return (
     <MuiThemeProvider theme={theme}>
-      <div className="App">
+      <Provider store={store}>
         <Router>
           <NavBar />
           <div className="container">
@@ -70,7 +74,7 @@ function App() {
             </Switch>
           </div>
         </Router>
-      </div>
+      </Provider>
     </MuiThemeProvider>
   );
 }
