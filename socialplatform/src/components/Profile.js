@@ -65,6 +65,16 @@ class Profile extends Component {
                 <LocationOn /> <div>{location}</div>
               </Fragment>
             )}
+            {website && (
+              <Fragment>
+                <LinkIcon />
+                {/* target _blank so opens in new window; rel is a thing to
+                  stop React complaining. */}
+                <a href={website} target="_blank" rel="noopener noreferrer">
+                  {website}
+                </a>
+              </Fragment>
+            )}
           </div>
         </Paper>
       ) : (
