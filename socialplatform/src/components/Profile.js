@@ -67,9 +67,9 @@ class Profile extends Component {
             {location && (
               <Fragment>
                 <LocationOn /> <span>{location}</span>
+                <br />
               </Fragment>
             )}
-            <br />
             {website && (
               <Fragment>
                 <LinkIcon />
@@ -78,9 +78,9 @@ class Profile extends Component {
                 <a href={website} target="_blank" rel="noopener noreferrer">
                   {website}
                 </a>
+                <br />
               </Fragment>
             )}
-            <br />
             <Fragment>
               <CalendarToday />
               <span>Joined {dayjs(createdAt).format("MMM YYYY")}</span>
