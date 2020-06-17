@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 
 import withStyles from "@material-ui/core/styles/withStyles";
 import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
 import MaterialLink from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
@@ -15,6 +16,7 @@ import Typography from "@material-ui/core/Typography";
 import LocationOn from "@material-ui/icons/LocationOn";
 import CalendarToday from "@material-ui/icons/CalendarToday";
 import LinkIcon from "@material-ui/icons/Link";
+import EditIcon from "@material-ui/icons/Edit";
 
 const styles = {
   paper: {
@@ -33,6 +35,16 @@ const styles = {
 };
 
 class Profile extends Component {
+  handleImageChange = (event) => {
+    const image = event.targt.files[0];
+  };
+
+  // selects hidden choose file button and simulates a click
+  handleEditPicture = () => {
+    const fileInput = document.getElementById("imageUpload");
+    fileInput.click();
+  };
+
   render() {
     const {
       classes,
@@ -54,6 +66,15 @@ class Profile extends Component {
       authenticated ? (
         <Paper className={classes.paper}>
           <img className={classes.profilePic} src={imageUrl} alt="Profile" />
+          <input
+            type="file"
+            id="imageUpload"
+            hidden="hidden" //hides choose file button
+            onChange={this.handleImageChange}
+          />
+          <IconButton onClick={this.handleEditPicture} className="buttons">
+            <EditIcon />
+          </IconButton>
           <MaterialLink
             component={Link}
             to={`/users/${userHandle}`}
@@ -72,7 +93,7 @@ class Profile extends Component {
             )}
             {website && (
               <Fragment>
-                <LinkIcon />
+                <LinkIcon />{" "}
                 {/* target _blank so opens in new window; rel is a thing to
                   stop React complaining. */}
                 <a href={website} target="_blank" rel="noopener noreferrer">
@@ -82,7 +103,7 @@ class Profile extends Component {
               </Fragment>
             )}
             <Fragment>
-              <CalendarToday />
+              <CalendarToday />{" "}
               <span>Joined {dayjs(createdAt).format("MMM YYYY")}</span>
             </Fragment>
           </div>
@@ -100,7 +121,7 @@ class Profile extends Component {
               to="/login"
             >
               Login
-            </Button>
+            </Button>{" "}
             <Button
               variant="contained"
               color="secondary"
