@@ -5,6 +5,7 @@ import {
   LOADING_UI,
   SET_AUTHENTICATED,
   SET_UNAUTHENTICATED,
+  LOADING_USER,
 } from "../types";
 import axios from "axios";
 
@@ -12,6 +13,7 @@ const initialState = {
   authenticated: false,
   credentials: {},
   likes: [],
+  loading: false,
 };
 
 export default function (state = initialState, action) {
@@ -26,7 +28,13 @@ export default function (state = initialState, action) {
     case SET_USER:
       return {
         authenticated: true,
+        loading: false,
         ...action.payload, // binds API values to values in initialState
+      };
+    case LOADING_USER:
+      return {
+        ...state,
+        loading: true,
       };
     default:
       return state; // state set to initialState as default arg

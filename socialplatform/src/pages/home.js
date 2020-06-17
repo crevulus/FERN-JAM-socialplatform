@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import Mention from "../components/Mention";
+import Profile from "../components/Profile";
 
 import Grid from "@material-ui/core/Grid";
 
@@ -35,7 +36,7 @@ export default class Home extends Component {
           {recentMentions}
         </Grid>
         <Grid item sm={4} xs={12}>
-          <p>Profile Right</p>
+          <Profile />
         </Grid>
       </Grid>
     );
