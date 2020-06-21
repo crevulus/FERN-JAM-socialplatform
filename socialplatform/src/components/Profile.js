@@ -18,8 +18,9 @@ import Tooltip from "@material-ui/core/Tooltip";
 import LocationOn from "@material-ui/icons/LocationOn";
 import CalendarToday from "@material-ui/icons/CalendarToday";
 import LinkIcon from "@material-ui/icons/Link";
-import EditIcon from "@material-ui/icons/Edit";
+import Photo from "@material-ui/icons/AddAPhoto";
 import KeyboardReturn from "@material-ui/icons/KeyboardReturn";
+import EditDetails from "./EditDetails";
 
 const styles = {
   paper: {
@@ -30,7 +31,7 @@ const styles = {
     borderRadius: "50%",
   },
   profileDetails: {
-    color: "red",
+    color: "primary",
   },
   buttons: {
     padding: 5,
@@ -84,9 +85,10 @@ class Profile extends Component {
           />
           <Tooltip title="Edit pic" placement="left">
             <IconButton onClick={this.handleEditPicture} className="buttons">
-              <EditIcon />
+              <Photo />
             </IconButton>
           </Tooltip>
+          <EditDetails />
           <MaterialLink
             component={Link}
             to={`/users/${userHandle}`}
@@ -120,7 +122,11 @@ class Profile extends Component {
             </Fragment>
             <br />
             <Fragment>
-              <Button onClick={this.handleLogout}>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={this.handleLogout}
+              >
                 <KeyboardReturn />
                 <span>Logout</span>
               </Button>
