@@ -19,6 +19,7 @@ import LocationOn from "@material-ui/icons/LocationOn";
 import CalendarToday from "@material-ui/icons/CalendarToday";
 import LinkIcon from "@material-ui/icons/Link";
 import EditIcon from "@material-ui/icons/Edit";
+import KeyboardReturn from "@material-ui/icons/KeyboardReturn";
 
 const styles = {
   paper: {
@@ -48,6 +49,10 @@ class Profile extends Component {
   handleEditPicture = () => {
     const fileInput = document.getElementById("imageUpload");
     fileInput.click();
+  };
+
+  handleLogout = () => {
+    this.props.logoutUser();
   };
 
   render() {
@@ -112,6 +117,13 @@ class Profile extends Component {
             <Fragment>
               <CalendarToday />{" "}
               <span>Joined {dayjs(createdAt).format("MMM YYYY")}</span>
+            </Fragment>
+            <br />
+            <Fragment>
+              <Button onClick={this.handleLogout}>
+                <KeyboardReturn />
+                <span>Logout</span>
+              </Button>
             </Fragment>
           </div>
         </Paper>
