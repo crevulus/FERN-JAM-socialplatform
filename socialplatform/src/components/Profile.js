@@ -148,10 +148,12 @@ class Profile extends Component {
   }
 }
 
+// extracts data from our state
 const mapStateToProps = (state) => ({
   user: state.user,
 });
 
+// decalre which actions to use/take from props
 const mapActionsToProps = { logoutUser, uploadImage };
 
 Profile.propTypes = {
