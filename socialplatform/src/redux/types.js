@@ -10,3 +10,4 @@ export const LOADING_UI = "LOADING_UI";
 export const CLEAR_ERRORS = "SET_AUTHENTICATED";
 
 // DATA REDUCER TYPES
+export const POST_MENTION = "POST_MENTION";
