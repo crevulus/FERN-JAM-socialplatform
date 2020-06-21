@@ -25,6 +25,30 @@ class EditDetails extends Component {
     open: false,
   };
 
+  setCredentialsState = (credentials) => {
+    this.setState({
+      bio: credentials.bio ? credentials.bio : "",
+      website: credentials.website ? credentials.website : "",
+      location: credentials.location ? credentials.location : "",
+    });
+  };
+
+  handleChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  handleSubmit = () => {
+    const userDetails = {
+      bio: this.state.bio,
+      website: this.state.website,
+      location: this.state.location,
+    };
+    this.props.editUserDetails(userDetails);
+    this.handleClose();
+  };
+
   handleOpen = () => {
     this.setState({ open: true });
     this.setCredentialsState(this.props.credentials);
@@ -39,18 +63,10 @@ class EditDetails extends Component {
     this.setCredentialsState(credentials);
   }
 
-  setCredentialsState = (credentials) => {
-    this.setState({
-      bio: credentials.bio ? credentials.bio : "",
-      website: credentials.website ? credentials.website : "",
-      location: credentials.location ? credentials.location : "",
-    });
-  };
-
   render() {
     return (
       <Fragment>
-        <Tooltip title="Edit details" placement="top">
+        <Tooltip title="Edit profile details" placement="top">
           <IconButton onClick={this.handleOpen}>
             <EditIcon color="primary" />
           </IconButton>
@@ -69,12 +85,41 @@ class EditDetails extends Component {
                 type="text"
                 label="Bio"
                 value={this.state.bio}
+                fullWidth
                 multiline
                 rows="5"
-                onChange={this.onChange}
+                onChange={this.handleChange}
+              />
+            </form>
+            <form>
+              <TextField
+                name="website"
+                type="text"
+                label="Website"
+                value={this.state.website}
+                fullWidth
+                onChange={this.handleChange}
+              />
+            </form>
+            <form>
+              <TextField
+                name="location"
+                type="text"
+                label="Location"
+                value={this.state.location}
+                fullWidth
+                onChange={this.handleChange}
               />
             </form>
           </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={this.handleSubmit} color="primary">
+              Save
+            </Button>
+          </DialogActions>
         </Dialog>
       </Fragment>
     );
@@ -83,7 +128,6 @@ class EditDetails extends Component {
 
 EditDetails.propTypes = {
   editUserDetails: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({

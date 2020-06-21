@@ -127,8 +127,8 @@ class Profile extends Component {
                 color="secondary"
                 onClick={this.handleLogout}
               >
-                <KeyboardReturn />
                 <span>Logout</span>
+                <KeyboardReturn />
               </Button>
             </Fragment>
           </div>
