@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import Link from "react-router-dom/Link";
+import EditDetails from "./EditDetails";
 
 import dayjs from "dayjs";
 
@@ -9,18 +10,16 @@ import { logoutUser, uploadImage } from "../redux/actions/userActions";
 
 import withStyles from "@material-ui/core/styles/withStyles";
 import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
 import MaterialLink from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
-import Tooltip from "@material-ui/core/Tooltip";
 
 import LocationOn from "@material-ui/icons/LocationOn";
 import CalendarToday from "@material-ui/icons/CalendarToday";
 import LinkIcon from "@material-ui/icons/Link";
-import Photo from "@material-ui/icons/AddAPhoto";
+import PhotoIcon from "@material-ui/icons/AddAPhoto";
 import KeyboardReturn from "@material-ui/icons/KeyboardReturn";
-import EditDetails from "./EditDetails";
+import ReuseButton from "./ReuseButton";
 
 const styles = {
   paper: {
@@ -83,11 +82,13 @@ class Profile extends Component {
             hidden="hidden" //hides choose file button
             onChange={this.handleImageChange}
           />
-          <Tooltip title="Edit pic" placement="left">
-            <IconButton onClick={this.handleEditPicture} className="buttons">
-              <Photo />
-            </IconButton>
-          </Tooltip>
+          <ReuseButton
+            tip="Edit pic"
+            onClick={this.handleEditPicture}
+            btnClassName="buttons"
+          >
+            <PhotoIcon color="primary" />
+          </ReuseButton>
           <EditDetails />
           <MaterialLink
             component={Link}
