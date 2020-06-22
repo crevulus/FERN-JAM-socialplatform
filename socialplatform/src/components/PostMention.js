@@ -12,9 +12,39 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
+import AddIcon from "@material-ui/icons/Add";
+
 class PostMention extends Component {
+  state = {
+    open: false,
+    body: "",
+    errors: {},
+  };
+
+  handleOpen = () => {
+    this.setState({
+      open: true,
+    });
+  };
+
+  handleClose = () => {
+    this.setState({
+      open: false,
+    });
+  };
+
   render() {
-    return <div></div>;
+    const { errors } = this.state;
+    const {
+      UI: { loading },
+    } = this.props;
+    return (
+      <Fragment>
+        <ReuseButton onClick={this.handleOpen} tip="Post something">
+          <AddIcon />
+        </ReuseButton>
+      </Fragment>
+    );
   }
 }
 
