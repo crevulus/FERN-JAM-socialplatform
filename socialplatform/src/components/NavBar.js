@@ -11,6 +11,7 @@ import AddIcon from "@material-ui/icons/Add";
 import HomeIcon from "@material-ui/icons/Home";
 
 import { connect } from "react-redux";
+import PostMention from "./PostMention";
 
 class NavBar extends Component {
   render() {
@@ -21,9 +22,7 @@ class NavBar extends Component {
           <Toolbar className="nav-container">
             {authenticated ? (
               <Fragment>
-                <ReuseButton tip="New post">
-                  <AddIcon />
-                </ReuseButton>
+                <PostMention />
                 <Link to="/">
                   <ReuseButton tip="Home">
                     <HomeIcon />

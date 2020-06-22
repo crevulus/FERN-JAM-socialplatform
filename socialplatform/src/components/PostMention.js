@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import ReuseButton from "./ReuseButton";
 
 import { connect } from "react-redux";
-import { postMention } from "../redux/actions/userActions";
+import { postMention } from "../redux/actions/dataActions";
 
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -46,25 +46,27 @@ class PostMention extends Component {
         </ReuseButton>
         <Dialog open={this.state.open} onClose={this.handleClose} fullWidth>
           <ReuseButton tip="Close" onClick={this.handleClose}>
-            <CloseIcon/>
+            <CloseIcon />
           </ReuseButton>
-          <DialogTitle>
-            Post a new mention
-          </DialogTitle>
+          <DialogTitle>Post a new mention</DialogTitle>
           <DialogContent>
             <form onSubmit={this.handleSubmit}>
               <TextField
-                onChange={this.handleChange} 
-                name="body" 
-                type="text" 
-                label="Make your mention" 
-                multiline 
-                rows="3" 
-                fullWidth 
-                placeholder="Whatcha thinkin'?" 
-                error={errors.body ? true : false} 
-                helperText={errors.body} />
-                <Button type="submit"/>
+                onChange={this.handleChange}
+                name="body"
+                type="text"
+                label="Make your mention"
+                multiline
+                rows="3"
+                fullWidth
+                placeholder="Whatcha thinkin'?"
+                error={errors.body ? true : false}
+                helperText={errors.body}
+              />
+              <Button type="submit" variant="contained" disabled={loading}>
+                Submit
+                {loading && <CircularProgress size={30} />}
+              </Button>
             </form>
           </DialogContent>
         </Dialog>
@@ -82,4 +84,4 @@ const mapStateToProps = (state) => ({
   UI: state.UI,
 });
 
-export default connect((mapStateToProps, { postMention }))(PostMention);
+export default connect(mapStateToProps, { postMention })(PostMention);
