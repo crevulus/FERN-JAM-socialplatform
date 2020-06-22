@@ -22,6 +22,18 @@ class PostMention extends Component {
     errors: {},
   };
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.UI.errors) {
+      this.setState({
+        errors: nextProps.UI.errors,
+      });
+    }
+    if (!nextProps.UI.errors && !nextProps.UI.loading) {
+      this.setState({ body: "" });
+      this.handleClose();
+    }
+  }
+
   handleOpen = () => {
     this.setState({
       open: true,
@@ -32,6 +44,17 @@ class PostMention extends Component {
     this.setState({
       open: false,
     });
+  };
+
+  handleChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    this.props.postMention({ body: this.state.body });
   };
 
   render() {
