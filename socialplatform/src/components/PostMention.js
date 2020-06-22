@@ -13,6 +13,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 import AddIcon from "@material-ui/icons/Add";
+import CloseIcon from "@material-ui/icons/Close";
 
 class PostMention extends Component {
   state = {
@@ -43,6 +44,30 @@ class PostMention extends Component {
         <ReuseButton onClick={this.handleOpen} tip="Post something">
           <AddIcon />
         </ReuseButton>
+        <Dialog open={this.state.open} onClose={this.handleClose} fullWidth>
+          <ReuseButton tip="Close" onClick={this.handleClose}>
+            <CloseIcon/>
+          </ReuseButton>
+          <DialogTitle>
+            Post a new mention
+          </DialogTitle>
+          <DialogContent>
+            <form onSubmit={this.handleSubmit}>
+              <TextField
+                onChange={this.handleChange} 
+                name="body" 
+                type="text" 
+                label="Make your mention" 
+                multiline 
+                rows="3" 
+                fullWidth 
+                placeholder="Whatcha thinkin'?" 
+                error={errors.body ? true : false} 
+                helperText={errors.body} />
+                <Button type="submit"/>
+            </form>
+          </DialogContent>
+        </Dialog>
       </Fragment>
     );
   }
