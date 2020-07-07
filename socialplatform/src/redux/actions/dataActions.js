@@ -10,10 +10,10 @@ import {
 } from "../types";
 import axios from "axios";
 
-export const getMentons = () => (dispatch) => {
+export const getMentions = () => (dispatch) => {
   dispatch({ type: LOADING_DATA });
   axios
-    .get("/screams")
+    .get("/mentions")
     .then((res) => {
       dispatch({
         type: SET_MENTIONS,

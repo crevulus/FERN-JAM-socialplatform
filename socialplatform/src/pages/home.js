@@ -2,29 +2,22 @@ import React, { Component } from "react";
 import axios from "axios";
 import Mention from "../components/Mention";
 import Profile from "../components/Profile";
+import PropTypes from "prop-types";
 
 import Grid from "@material-ui/core/Grid";
 
-export default class Home extends Component {
-  state = {
-    mentions: null,
-  };
+import { connect } from "react-redux";
+import { getMentions } from "../redux/actions/dataActions";
 
+class Home extends Component {
   componentDidMount() {
-    axios
-      .get("/mentions")
-      .then((res) => {
-        console.log(res.data);
-        this.setState({
-          mentions: res.data,
-        });
-      })
-      .catch((err) => console.error(err));
+    this.props.getMentions();
   }
 
   render() {
-    let recentMentions = this.state.mentions ? (
-      this.state.mentions.map((mention) => (
+    const { mentions, loading } = this.props.data;
+    let recentMentions = !loading ? (
+      mentions.map((mention) => (
         <Mention key={mention.mentionId} mention={mention} />
       ))
     ) : (
@@ -42,3 +35,15 @@ export default class Home extends Component {
     );
   }
 }
+
+Home.propTypes = {
+  getMentions: PropTypes.func.isRequired,
+  data: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  // data reducer in store.js puts all data in data object
+  data: state.data,
+});
+
+export default connect(mapStateToProps, { getMentions })(Home);

@@ -2,12 +2,19 @@ import React, { Component } from "react";
 import Link from "react-router-dom/Link";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import PropTypes from "prop-types";
+import ReuseButton from "./ReuseButton";
+
+import { connect } from "react-redux";
+import { likeMention } from "../redux/actions/dataActions";
 
 import withStyles from "@material-ui/core/styles/withStyles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
+import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
+import FavoriteIcon from "@material-ui/icons/Favorite";
 
 const styles = {
   card: {
@@ -24,6 +31,25 @@ const styles = {
 };
 
 class Mention extends Component {
+  // checks if mention has already been liked
+  likedMention = () => {
+    // mention obj is passed down from home
+    if (
+      this.props.user.likes &&
+      this.props.user.likes.find(
+        (like) => like.mentionId === this.props.mention.mentionId
+      )
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  likeMention = () => {
+    this.props.likeMention(this.props.mention.mentionId);
+  };
+
   render() {
     dayjs.extend(relativeTime);
     const {
@@ -37,7 +63,24 @@ class Mention extends Component {
         likeCount,
         commentCount,
       },
+      user: { authenticated },
     } = this.props;
+
+    // not logged in 7 click heart -> redir to login
+    const likeButton = !authenticated ? (
+      <ReuseButton tip="Like this mention">
+        <Link to="/login">
+          <FavoriteBorder color="primary" />
+        </Link>
+      </ReuseButton>
+    ) : this.likedMention() ? (
+      <FavoriteIcon color="primary" />
+    ) : (
+      <ReuseButton tip="Like this mention" onClick={this.likeMention}>
+        <FavoriteBorder color="primary" />
+      </ReuseButton>
+    );
+
     return (
       <Card className={classes.card}>
         <CardMedia
@@ -53,10 +96,30 @@ class Mention extends Component {
             {dayjs(createdAt).fromNow()}
           </Typography>
           <Typography variant="body1">{body}</Typography>
+          {likeButton}
+          <span>{likeCount} likes</span>
         </CardContent>
       </Card>
     );
   }
 }
 
-export default withStyles(styles)(Mention);
+Mention.propTypes = {
+  likeMention: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
+  mention: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  user: state.user,
+});
+
+const mapActionsToProps = {
+  likeMention,
+};
+
+export default connect(
+  mapStateToProps,
+  mapActionsToProps
+)(withStyles(styles)(Mention));
