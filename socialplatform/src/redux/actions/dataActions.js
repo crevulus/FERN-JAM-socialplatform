@@ -6,7 +6,7 @@ import {
   SET_MENTIONS,
   LOADING_DATA,
   LIKE_MENTION,
-  UNLIKE_MENTION,
+  // UNLIKE_MENTION,
 } from "../types";
 import axios from "axios";
 
@@ -27,6 +27,20 @@ export const getMentons = () => (dispatch) => {
       });
     });
 };
+
+export const likeMention = (mentionId) => (dispatch) => {
+  axios
+    .get(`/mention/${mentionId}/like`)
+    .then((res) => {
+      dispatch({
+        type: LIKE_MENTION,
+        payload: res,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+// unlike scream 24 5
 
 export const postMention = (newMention) => (dispatch) => {
   dispatch({ type: LOADING_UI });
