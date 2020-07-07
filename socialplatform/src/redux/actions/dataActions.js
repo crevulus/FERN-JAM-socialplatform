@@ -1,5 +1,32 @@
-import { LOADING_UI, SET_ERRORS, POST_MENTION, CLEAR_ERRORS } from "../types";
+import {
+  LOADING_UI,
+  SET_ERRORS,
+  POST_MENTION,
+  CLEAR_ERRORS,
+  SET_MENTIONS,
+  LOADING_DATA,
+  LIKE_MENTION,
+  UNLIKE_MENTION,
+} from "../types";
 import axios from "axios";
+
+export const getMentons = () => (dispatch) => {
+  dispatch({ type: LOADING_DATA });
+  axios
+    .get("/screams")
+    .then((res) => {
+      dispatch({
+        type: SET_MENTIONS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch({
+        type: SET_MENTIONS,
+        payload: err.response.data,
+      });
+    });
+};
 
 export const postMention = (newMention) => (dispatch) => {
   dispatch({ type: LOADING_UI });

@@ -8,6 +8,11 @@ export const LOADING_USER = "LOADING_USER";
 export const SET_ERRORS = "SET_ERRORS";
 export const LOADING_UI = "LOADING_UI";
 export const CLEAR_ERRORS = "SET_AUTHENTICATED";
+export const LOADING_DATA = "LOADING_DATA";
 
 // DATA REDUCER TYPES
 export const POST_MENTION = "POST_MENTION";
+export const SET_MENTION = "SET_MENTION";
+export const SET_MENTIONS = "SET_MENTIONS";
+export const LIKE_MENTION = "LIKE_MENTION";
+export const UNLIKE_MENTION = "UNLIKE_MENTION";
