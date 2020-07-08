@@ -8,6 +8,7 @@ import Grid from "@material-ui/core/Grid";
 
 import { connect } from "react-redux";
 import { getMentions } from "../redux/actions/dataActions";
+import Trends from "../components/Trends";
 
 class Home extends Component {
   componentDidMount() {
@@ -33,7 +34,7 @@ class Home extends Component {
             <Profile />
           </Grid>
           <Grid item sm={4} xs={6}>
-            <div>Block of text</div>
+            <Trends />
           </Grid>
         </Grid>
         <Grid container spacing={10}>
