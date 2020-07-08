@@ -2,6 +2,7 @@ const functions = require("firebase-functions");
 const express = require("express");
 const firebase = require("firebase");
 const { db } = require("./util/admin");
+const Twitter = require("twitter");
 
 const {
   getAllMentions,
@@ -44,6 +45,24 @@ app.get("/user", firebaseAuth, getAuthUser);
 // exports function that handles HTTP events
 // specifies zone and saves few hundred ms of latency
 exports.api = functions.region("europe-west3").https.onRequest(app);
+
+const client = new Twitter({
+  consumer_key: process.env.REACT_APP_API_KEY,
+  consumer_secret: process.env.REACT_APP_API_SECRET_KEY,
+  bearer_token: process.env.REACT_APP_BEARER_TOKEN,
+});
+
+exports.twitterHandler = functions.region("europe-west3").https.onRequest(
+  client.get(
+    "https://api.twitter.com/1.1/trends/place.json?id=727232",
+    function (error, trends, response) {
+      if (!error) {
+        console.log(trends);
+        return res.json;
+      }
+    }
+  )
+);
 
 exports.onUserImageChange = functions
   .region("europe-west3")
