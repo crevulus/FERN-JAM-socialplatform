@@ -30,11 +30,11 @@ export const getMentions = () => (dispatch) => {
 
 export const likeMention = (mentionId) => (dispatch) => {
   axios
-    .get(`/mention/${mentionId}/like`)
+    .get(`/mentions/${mentionId}/like`)
     .then((res) => {
       dispatch({
         type: LIKE_MENTION,
-        payload: res,
+        payload: res.data,
       });
     })
     .catch((err) => console.log(err));

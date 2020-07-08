@@ -13,8 +13,8 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
-import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
-import FavoriteIcon from "@material-ui/icons/Favorite";
+import CheckCircleOutlineSharpIcon from "@material-ui/icons/CheckCircleOutlineSharp";
+import CheckCircleSharpIcon from "@material-ui/icons/CheckCircleSharp";
 
 const styles = {
   card: {
@@ -47,6 +47,7 @@ class Mention extends Component {
   };
 
   likeMention = () => {
+    console.log(this.props.mention.mentionId);
     this.props.likeMention(this.props.mention.mentionId);
   };
 
@@ -66,18 +67,18 @@ class Mention extends Component {
       user: { authenticated },
     } = this.props;
 
-    // not logged in 7 click heart -> redir to login
+    // not logged in & click heart -> redir to login
     const likeButton = !authenticated ? (
       <ReuseButton tip="Like this mention">
         <Link to="/login">
-          <FavoriteBorder color="primary" />
+          <CheckCircleOutlineSharpIcon color="primary" />
         </Link>
       </ReuseButton>
     ) : this.likedMention() ? (
-      <FavoriteIcon color="primary" />
+      <CheckCircleSharpIcon color="primary" />
     ) : (
       <ReuseButton tip="Like this mention" onClick={this.likeMention}>
-        <FavoriteBorder color="primary" />
+        <CheckCircleOutlineSharpIcon color="primary" />
       </ReuseButton>
     );
 
