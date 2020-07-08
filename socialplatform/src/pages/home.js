@@ -24,14 +24,22 @@ class Home extends Component {
       <p>Loading...</p>
     );
     return (
-      <Grid container spacing={10}>
-        <Grid item sm={8} xs={12}>
-          {recentMentions}
+      <div>
+        <Grid container spacing={10}>
+          <Grid item sm={8} xs={12}>
+            {recentMentions}
+          </Grid>
+          <Grid item sm={4} xs={6}>
+            <Profile />
+          </Grid>
+          <Grid item sm={4} xs={6}>
+            <div>Block of text</div>
+          </Grid>
         </Grid>
-        <Grid item sm={4} xs={12}>
-          <Profile />
+        <Grid container spacing={10}>
+          <Grid item sm={8} xs={12} />
         </Grid>
-      </Grid>
+      </div>
     );
   }
 }
