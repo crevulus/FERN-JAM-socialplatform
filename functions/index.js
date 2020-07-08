@@ -42,27 +42,36 @@ app.post("/user/image", firebaseAuth, uploadProfilePhoto);
 app.post("/user", firebaseAuth, addUserDetails);
 app.get("/user", firebaseAuth, getAuthUser);
 
+app.get("/twitter", (req, res) => {
+  const client = new Twitter({
+    consumer_key: process.env.REACT_APP_API_KEY,
+    consumer_secret: process.env.REACT_APP_API_SECRET_KEY,
+    bearer_token: process.env.REACT_APP_BEARER_TOKEN,
+  });
+  console.log("in twitter retriever");
+  client.get(
+    "https://api.twitter.com/1.1/trends/place.json?id=727232",
+    function (error, trends, res) {
+      if (!error) {
+        console.log(trends);
+        return trends;
+      }
+    }
+  );
+  res.send("hello Chris");
+});
+
 // exports function that handles HTTP events
 // specifies zone and saves few hundred ms of latency
 exports.api = functions.region("europe-west3").https.onRequest(app);
 
-const client = new Twitter({
-  consumer_key: process.env.REACT_APP_API_KEY,
-  consumer_secret: process.env.REACT_APP_API_SECRET_KEY,
-  bearer_token: process.env.REACT_APP_BEARER_TOKEN,
-});
+// function twitterRetriver(req, res) {
 
-exports.twitterHandler = functions.region("europe-west3").https.onRequest(
-  client.get(
-    "https://api.twitter.com/1.1/trends/place.json?id=727232",
-    function (error, trends, response) {
-      if (!error) {
-        console.log(trends);
-        return res.json;
-      }
-    }
-  )
-);
+// }
+
+// exports.twitterHandler = functions.region("europe-west3").https.onRequest(
+
+// );
 
 exports.onUserImageChange = functions
   .region("europe-west3")
