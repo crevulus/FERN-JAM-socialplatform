@@ -16,7 +16,7 @@ exports.getAllMentions = (req, res) => {
           userHandle: doc.data().userHandle,
           createdAt: doc.data().createdAt,
           commentCount: doc.data().commentCount,
-          likeCount: doc.data().likecount,
+          likeCount: doc.data().likeCount,
           userImage: doc.data().userImage,
         });
       });
