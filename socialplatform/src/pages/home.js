@@ -9,6 +9,7 @@ import Grid from "@material-ui/core/Grid";
 import { connect } from "react-redux";
 import { getMentions } from "../redux/actions/dataActions";
 import Trends from "../components/Trends";
+import Graph from "../components/Graph";
 
 class Home extends Component {
   componentDidMount() {
@@ -38,7 +39,9 @@ class Home extends Component {
           </Grid>
         </Grid>
         <Grid container spacing={10}>
-          <Grid item sm={8} xs={12} />
+          <Grid item sm={8} xs={12}>
+            <Graph />
+          </Grid>
         </Grid>
       </div>
     );
