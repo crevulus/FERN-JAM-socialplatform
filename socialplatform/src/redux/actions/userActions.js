@@ -15,9 +15,6 @@ export const loginUser = (userData, history) => (dispatch) => {
     .then((res) => {
       console.log(res.data);
       localStorage.setItem("firebaseIdToken", `Bearer ${res.data.token}`);
-      this.setState({
-        loading: false,
-      });
       // every time we send a req with axios it will have a an auth header with our token
       axios.defaults.headers.common[
         "Authorization"
@@ -29,9 +26,10 @@ export const loginUser = (userData, history) => (dispatch) => {
     })
     .catch((err) => {
       console.log("got into catch before dispatch");
+      console.log(err);
       dispatch({
         type: SET_ERRORS,
-        payload: err.response.data, // this is where we have the undefined problem...
+        payload: err.response.data,
       });
     });
 };
@@ -43,9 +41,6 @@ export const signupUser = (newUserData, history) => (dispatch) => {
     .then((res) => {
       console.log(res.data);
       localStorage.setItem("firebaseIdToken", `Bearer ${res.data.userToken}`);
-      this.setState({
-        loading: false,
-      });
       // every time we send a req with axios it will have a an auth header with our token
       axios.defaults.headers.common[
         "Authorization"
@@ -59,7 +54,7 @@ export const signupUser = (newUserData, history) => (dispatch) => {
       console.log("got into catch before dispatch");
       dispatch({
         type: SET_ERRORS,
-        payload: err.response.data, // this is where we have the undefined problem...
+        payload: err.response.data,
       });
     });
 };
