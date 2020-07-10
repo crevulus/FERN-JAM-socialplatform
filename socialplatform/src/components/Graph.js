@@ -1,5 +1,14 @@
 import React, { Component } from "react";
 import Chart from "chart.js";
+import { Card } from "@material-ui/core";
+import { connect } from "react-redux";
+
+const styles = {
+  card: {
+    display: "flex",
+    marginBottom: 20,
+  },
+};
 
 class Graph extends Component {
   constructor(props) {
@@ -62,17 +71,12 @@ class Graph extends Component {
   }
 
   render() {
-    const graphStyle = {
-      backgroundColor: "red",
-      position: "relative",
-      height: 10,
-      responsive: true,
-    };
-
     return (
-      <div class="chart-container" style={{ graphStyle }}>
-        <canvas ref={this.chartRef} />
-      </div>
+      <Card className={styles.card}>
+        <div class="chart-container">
+          <canvas ref={this.chartRef} />
+        </div>
+      </Card>
     );
   }
 }

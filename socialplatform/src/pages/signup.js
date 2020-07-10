@@ -140,7 +140,7 @@ class Signup extends Component {
               type="submit"
               variant="contained"
               size="large"
-              color="primary"
+              color="secondary"
               className={classes.button}
               disabled={loading} // takes a boolean value
             >

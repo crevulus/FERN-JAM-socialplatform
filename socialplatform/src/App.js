@@ -30,7 +30,7 @@ const theme = createMuiTheme({
       main: purple[500],
     },
     secondary: {
-      main: "#f44336",
+      main: "#00e676",
     },
   },
   typography: {
